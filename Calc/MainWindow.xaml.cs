@@ -23,75 +23,37 @@ namespace Calc
         public MainWindow()
         {
             InitializeComponent();
-            comboBoxOperations.SelectedIndex = 0;
 
-            Model model = new Model();
+            Model.comboBoxOperations = comboBoxOperations;
+            Model.GetComboBoxValue = 0;
+
+            Model.textBoxFirstValue = textBoxFirstValue;
+            Model.textBoxSecondValue = textBoxSecondValue;
+            Model.textBlockResult = textBlockResult;
+
+            Model.labelOperationSign = labelOperationSign;
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-          
-            switch (comboBoxOperations.SelectedIndex)
-            {
-                case 0:
-                    labelOperationSign.Content = "+";
-                    break;
-                case 1:
-                    labelOperationSign.Content = "-";
-                    break;
-                case 2:
-                    labelOperationSign.Content = "/";
-                    break;
-                case 3:
-                    labelOperationSign.Content = "*";
-                    break;
-             
-            }
+            labelOperationSign.Content = Model.GetLabelOperationSign;
         }
 
         private void buttonCalc_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                double firstValue = Convert.ToDouble(textBoxFirstValue.Text);
-                double secondValue = Convert.ToDouble(textBoxSecondValue.Text);
+            if (!Model.isCorrectValue(textBoxFirstValue.Text, textBoxSecondValue.Text))
+                return;
 
-                if (isDivisionWithZero(secondValue))
+            Model.GetSetFirstValue = Convert.ToDouble(textBoxFirstValue.Text);
+            Model.GetSetSecondValue = Convert.ToDouble(textBoxSecondValue.Text);
+
+            if (Model.isDivisionWithZero())
                     return;
 
-                switch (comboBoxOperations.SelectedIndex)
-                {
-                    case 0:
-                        textBlockResult.Text = "" + (firstValue + secondValue);
-                        break;
-                    case 1:
-                        textBlockResult.Text = "" + (firstValue - secondValue);
-                        break;
-                    case 2:
-                        textBlockResult.Text = "" + (firstValue / secondValue);
-                        break;
-                    case 3:
-                        textBlockResult.Text = "" + (firstValue * secondValue);
-                        break; 
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Неверные данные");
-                return;
-            }
+            Model.calcValues();
 
-        }
-
-        private bool isDivisionWithZero(double secondValue)
-        {
-            if (secondValue == 0 && comboBoxOperations.SelectedIndex == 2)
-            {
-                MessageBox.Show("Деление на ноль невозможно"); 
-                return true;
-            }
-            return false;
-            
+            textBlockResult.Text = Model.GetResultValue;
+                     
         }
     }
 }

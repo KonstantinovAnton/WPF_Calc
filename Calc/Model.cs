@@ -8,63 +8,99 @@ using System.Windows.Controls;
 
 namespace Calc
 {
-    internal class Model
+    public static class Model
     {
         // блок с данными
 
-        public static double firstValue;
-        public static double secondValue;
-        public static double result;
+        private static double firstValue;
+        private static double secondValue;
+        private static double result;
 
-        // блок для обращения к текстовым полям и лэйблу
+        // блок для обращения к текстовым полям
 
-        public static TextBlock textBoxFirstValue;       // Текст. блок с первым значением
-        public static TextBlock textBoxSecondValue;      // Текст. блок с вторым значением
+        public static TextBox textBoxFirstValue;         // Текст. бокс с первым значением
+        public static TextBox textBoxSecondValue;        // Текст. бокс с вторым значением
         public static TextBlock textBlockResult;         // Текст. блок с результатом
 
         public static Label labelOperationSign;          // Лэйбл с знаком операции
 
         public static ComboBox comboBoxOperations;       // Комбо бокс с арифм. операциями
+        
 
 
         // блок с бизнес-логикой
 
 
         // свойство для получения значение первого числа
-        public static double GetFirstValue              
+        public static double GetSetFirstValue              
         {
             get
             {
                 return firstValue;
-            }       
+            }
+            set
+            {
+                firstValue = value;
+            }
         }
 
+
         // свойство для получения значение второго числа
-        public static double GetSecondValue            
+        public static double GetSetSecondValue            
         {
             get
             {
                 return secondValue;
             }
+            set
+            {
+                secondValue = value;
+            }
         }
 
-        // свойство для получения индекса выбранной операции
+        // свойство для получения и присваивания индекса выбранной операции
         public static int GetComboBoxValue               
         {
             get
             {
                 return comboBoxOperations.SelectedIndex;
             }
+            set
+            {
+                comboBoxOperations.SelectedIndex = value;
+            }
         }
 
         // свойство для установки значения результата текстового блока
-        public static double SetResultValue              
+        public static string GetResultValue              
         {
-            set
+            get
             {
-                result = value;
-                textBlockResult.Text = result.ToString();
+                return Convert.ToString(result);
             }
+           
+        }
+
+        // свойство для получения знака текущей операции
+        public static string GetLabelOperationSign
+        {
+            get
+            {
+                switch (comboBoxOperations.SelectedIndex)
+                {
+                    case 0:
+                        return "+";
+                    case 1:
+                        return "-";
+                    case 2:
+                        return "/";
+                    case 3:
+                        return "*";
+                    default:
+                        return "&";                          
+                }
+            }
+
         }
 
         // метод для определения выполняется ли деление на ноль
@@ -99,12 +135,12 @@ namespace Calc
         }
 
         // метод для определения корректности значений
-        public static bool isCorrectValue()
+        public static bool isCorrectValue(string value1, string value2)
         {
             try
             {
-                double firstValue = Convert.ToDouble(textBoxFirstValue.Text);
-                double secondValue = Convert.ToDouble(textBoxSecondValue.Text);
+                double firstValue = Convert.ToDouble(value1);
+                double secondValue = Convert.ToDouble(value2);
 
                 return true;
             }
@@ -114,7 +150,6 @@ namespace Calc
                 return false;
             }
         }
-
 
     }
 }
